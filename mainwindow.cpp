@@ -54,6 +54,49 @@ void MainWindow::addSource(const QString & target, const QString& sources)
     ui->sourcesTable->setItem(row, 1, sourcesColumn);
 }
 
+void MainWindow::PrepareCMakeListsVariables()
+{
+    // project tab
+    QString projectName = ui->projectNameEdit->text();
+
+    // flags tab
+    auto flagsCount = ui->flagsTable->rowCount();
+    for(int rowIndex =0; rowIndex < flagsCount; rowIndex++) {
+        auto keyItem = ui->flagsTable->item(rowIndex, 0);
+        auto valueItem = ui->flagsTable->item(rowIndex, 1);
+
+        // QString, QString
+        QString flagKey = keyItem->text();
+        QString flagValue = valueItem->text();
+    }
+
+    // preprocessor tab
+    if (ui->definesEdit->toPlainText().size() > 0) {
+        QStringList defines = ui->definesEdit->toPlainText().split(QRegExp("\\ |\\;|\\n"));
+        for(int index = 0; index < defines.length(); index++) {
+            qDebug() << defines.at(index) << endl;
+        }
+    }
+
+    // directory tab
+    // 1. include dir (QListWidget)
+    for (int row = 0; row < ui->includeList->count(); row++) {
+        auto item = ui->includeList->item(row);// QListWidgetItem
+        //QString indeludeDir = item->text();
+    }
+
+    // 2. sources (QTableWidget)
+    for(int row = 0; row < ui->sourcesTable->rowCount(); row++) {
+        auto target = ui->sourcesTable->item(row, 0);
+        auto sources = ui->sourcesTable->item(row, 1);
+        // target, sources
+    }
+
+
+    // preview tab
+
+}
+
 void MainWindow::on_actionExport_triggered()
 {
     QString projectName = ui->projectNameEdit->text();

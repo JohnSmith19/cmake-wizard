@@ -22,6 +22,8 @@ public:
     void insertNewIncludeDirectory(const QString&);
     void addSource(const QString & target, const QString& sources);
 
+    void PrepareCMakeListsVariables();
+
 private slots:
     void on_actionExport_triggered();
 
