@@ -28,6 +28,14 @@ void MainWindow::InsertFlagItem(const QString & key, const QString & value)
     ui->flagsTable->setItem(row, 1,valueColumn);
 }
 
+void MainWindow::insertNewIncludeDirectory(const QString & dir)
+{
+    QListWidgetItem* newItem = new QListWidgetItem(dir);
+    newItem->setFlags(newItem->flags() | Qt::ItemIsEditable);
+
+    ui->includeList->addItem(newItem);
+}
+
 void MainWindow::on_actionExport_triggered()
 {
     QString projectName = ui->projectNameEdit->text();
@@ -41,4 +49,16 @@ void MainWindow::on_flagsAddBtn_clicked()
 void MainWindow::on_flagsRemoveBtn_clicked()
 {
     ui->flagsTable->removeRow(ui->flagsTable->currentRow());
+}
+
+void MainWindow::on_addIncludeBtn_clicked()
+{
+    insertNewIncludeDirectory("<Path>");
+}
+
+void MainWindow::on_includeList_itemChanged(QListWidgetItem *item)
+{
+    if(item->text().length() == 0) {
+        ui->includeList->takeItem(ui->includeList->row(item));
+    }
 }
