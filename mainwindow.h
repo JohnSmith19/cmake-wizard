@@ -20,6 +20,7 @@ public:
 
     void InsertFlagItem(const QString&, const QString&);
     void insertNewIncludeDirectory(const QString&);
+    void addSource(const QString & target, const QString& sources);
 
 private slots:
     void on_actionExport_triggered();
@@ -31,6 +32,12 @@ private slots:
     void on_addIncludeBtn_clicked();
 
     void on_includeList_itemChanged(QListWidgetItem *item);
+
+    void on_addSourceBtn_clicked();
+
+    void on_removeSourceBtn_clicked();
+
+    void currentTabChanged(int index);
 
 private:
     Ui::MainWindow *ui;

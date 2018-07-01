@@ -1,5 +1,6 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+#include "QDebug"
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -9,6 +10,11 @@ MainWindow::MainWindow(QWidget *parent) :
 
     ui->flagsTable->horizontalHeader()->setStretchLastSection(true);
     ui->flagsTable->setSelectionBehavior(QAbstractItemView::SelectRows);
+
+    ui->sourcesTable->horizontalHeader()->setStretchLastSection(true);
+    ui->sourcesTable->setSelectionBehavior(QAbstractItemView::SelectRows);
+
+    connect(ui->tabWidget, SIGNAL(currentChanged(int)), this, SLOT(currentTabChanged(int)));
 }
 
 MainWindow::~MainWindow()
@@ -36,6 +42,18 @@ void MainWindow::insertNewIncludeDirectory(const QString & dir)
     ui->includeList->addItem(newItem);
 }
 
+void MainWindow::addSource(const QString & target, const QString& sources)
+{
+    int row = ui->sourcesTable->rowCount();
+    ui->sourcesTable->insertRow(row);
+
+    auto targetColumn = new QTableWidgetItem(target);
+    auto sourcesColumn = new QTableWidgetItem(sources);
+
+    ui->sourcesTable->setItem(row, 0, targetColumn);
+    ui->sourcesTable->setItem(row, 1, sourcesColumn);
+}
+
 void MainWindow::on_actionExport_triggered()
 {
     QString projectName = ui->projectNameEdit->text();
@@ -60,5 +78,25 @@ void MainWindow::on_includeList_itemChanged(QListWidgetItem *item)
 {
     if(item->text().length() == 0) {
         ui->includeList->takeItem(ui->includeList->row(item));
+    }
+}
+
+void MainWindow::on_addSourceBtn_clicked()
+{
+    addSource("<Target>", "main.cpp");
+}
+
+void MainWindow::on_removeSourceBtn_clicked()
+{
+    ui->sourcesTable->removeRow(ui->sourcesTable->currentRow());
+}
+
+void MainWindow::currentTabChanged(int index)
+{
+    qDebug() << "current tab index " << index << endl;
+
+    // preview tab selected
+    if(index == 4) {
+
     }
 }

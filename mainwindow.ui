@@ -123,7 +123,18 @@
          </widget>
         </item>
         <item>
-         <widget class="QTableWidget" name="sourcesTable"/>
+         <widget class="QTableWidget" name="sourcesTable">
+          <column>
+           <property name="text">
+            <string>Executable</string>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>Source Files</string>
+           </property>
+          </column>
+         </widget>
         </item>
         <item>
          <layout class="QHBoxLayout" name="horizontalLayout_4">
