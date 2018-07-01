@@ -25,10 +25,12 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += \
         main.cpp \
-        mainwindow.cpp
+        mainwindow.cpp \
+    cmakelists.cpp
 
 HEADERS += \
-        mainwindow.h
+        mainwindow.h \
+    cmakelists.h
 
 FORMS += \
         mainwindow.ui

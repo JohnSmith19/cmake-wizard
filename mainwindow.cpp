@@ -1,6 +1,7 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "QDebug"
+#include "cmakelists.h"
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -56,8 +57,12 @@ void MainWindow::addSource(const QString & target, const QString& sources)
 
 void MainWindow::PrepareCMakeListsVariables()
 {
+    CMakeLists cmakelists;
+
     // project tab
     QString projectName = ui->projectNameEdit->text();
+
+    cmakelists.SetProjectName(projectName);
 
     // flags tab
     auto flagsCount = ui->flagsTable->rowCount();
@@ -68,13 +73,17 @@ void MainWindow::PrepareCMakeListsVariables()
         // QString, QString
         QString flagKey = keyItem->text();
         QString flagValue = valueItem->text();
+        cmakelists.AddCMakeFlags(flagKey, flagValue);
     }
 
     // preprocessor tab
     if (ui->definesEdit->toPlainText().size() > 0) {
         QStringList defines = ui->definesEdit->toPlainText().split(QRegExp("\\ |\\;|\\n"));
+
         for(int index = 0; index < defines.length(); index++) {
             qDebug() << defines.at(index) << endl;
+            QString define = defines.at(index);
+            cmakelists.AddDefine(define);
         }
     }
 
@@ -83,6 +92,7 @@ void MainWindow::PrepareCMakeListsVariables()
     for (int row = 0; row < ui->includeList->count(); row++) {
         auto item = ui->includeList->item(row);// QListWidgetItem
         //QString indeludeDir = item->text();
+        cmakelists.AddIncludeDirectory(item->text());
     }
 
     // 2. sources (QTableWidget)
@@ -90,11 +100,11 @@ void MainWindow::PrepareCMakeListsVariables()
         auto target = ui->sourcesTable->item(row, 0);
         auto sources = ui->sourcesTable->item(row, 1);
         // target, sources
+        cmakelists.AddSource(target->text(), sources->text());
     }
 
-
     // preview tab
-
+    QString previewCmakeLists_text = cmakelists.GenerateCMakeLists();
 }
 
 void MainWindow::on_actionExport_triggered()
@@ -140,6 +150,6 @@ void MainWindow::currentTabChanged(int index)
 
     // preview tab selected
     if(index == 4) {
-
+        PrepareCMakeListsVariables();
     }
 }
