@@ -43,6 +43,7 @@ private slots:
 
 private:
     Ui::MainWindow *ui;
+    QString cmakeListResult;
 };
 
 #endif // MAINWINDOW_H

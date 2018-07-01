@@ -1,6 +1,8 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-#include "QDebug"
+#include <QDebug>
+#include <QFileDialog>
+#include <QMessageBox>
 #include "cmakelists.h"
 
 MainWindow::MainWindow(QWidget *parent) :
@@ -105,11 +107,38 @@ void MainWindow::PrepareCMakeListsVariables()
 
     // preview tab
     QString previewCmakeLists_text = cmakelists.GenerateCMakeLists();
+
+    ui->previewEdit->clear();
+    ui->previewEdit->appendPlainText(previewCmakeLists_text);
+
+    cmakeListResult = previewCmakeLists_text;
 }
 
 void MainWindow::on_actionExport_triggered()
 {
-    QString projectName = ui->projectNameEdit->text();
+    QString dir = QFileDialog::getExistingDirectory(this, "Directory to save", QDir::currentPath(), QFileDialog::ShowDirsOnly);
+    if(dir.length() == 0) {
+       QMessageBox::critical(this, "Failed to get dir", "Failed to get directory to save", QMessageBox::Ok);
+
+       return;
+    }
+
+    auto filePath = QDir(dir).filePath("CMakeLists.txt");
+
+    QFile file(filePath);
+    if(!file.open(QIODevice::WriteOnly | QIODevice::Text)) {
+        QMessageBox::critical(this, "Failed to file open", "Failed to file open", QMessageBox::Ok);
+
+        return;
+    }
+
+    QTextStream stream(&file);
+
+    PrepareCMakeListsVariables();
+
+    stream << cmakeListResult << endl;
+
+    file.close();
 }
 
 void MainWindow::on_flagsAddBtn_clicked()
